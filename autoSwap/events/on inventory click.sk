@@ -1,0 +1,8 @@
+on inventory click:
+    
+    if name of player's current inventory is "&0Opções do Auto Switch:":
+        loop numbers between 0 and 26:
+            if clicked raw slot is loop-value:
+                cancel event
+                if loop-value is 13:
+                    turnAutoSwap(player)

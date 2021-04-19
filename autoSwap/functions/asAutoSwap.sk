@@ -79,13 +79,6 @@ function autoSwap(player: player, block: block, tool: item type):
                         set current hotbar slot of {_player} to slot {_n} of {_player}'s inventory
                         stop loop
                     else:
-                        send action bar "&cVocê não tem nenhuma &nferramenta&c em sua &lHOTBAR&c que seja eficiente para quebrar esse &nbloco&c." to {_player}
-                        if {sound::%{_player}%} is not set:
-                            play sound "ENTITY_VILLAGER_NO" with volume 5 to {_player}
-                            set {sound::%{_player}%} to now
-                        else if difference between {sound::%{_player}%} and now >= 2 seconds: 
-                            play sound "ENTITY_VILLAGER_NO" with volume 5 to {_player}
-                            set {sound::%{_player}%} to now
-                        stop loop
+                        add 1 to {_n}
                 else:
                     add 1 to {_n}

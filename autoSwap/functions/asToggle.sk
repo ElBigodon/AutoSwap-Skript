@@ -1,15 +1,6 @@
-on inventory click:
-    
-    if name of player's current inventory is "&0Opções do Auto Switch:":
-        loop numbers between 0 and 26:
-            if clicked raw slot is loop-value:
-                cancel event
-                if loop-value is 13:
-                    asTurnOnandOff(player)
-
 function asToggle(player: player):
 
-    loadPlayerYml({_player})
+    asLoadPlayerYml({_player})
 
     open chest inventory named "&0Opções do Auto Switch:" to {_player}
 
@@ -28,8 +19,7 @@ function asToggle(player: player):
 
         add 1 to {_n}
 
-
-function asTurnOnandOff(player: player):
+function turnAutoSwap(player: player):
 
     if yml "%{_player}'s uuid%.data" is loaded:
         if yml value "autoswap.enable" from "%{_player}'s uuid%.data" is true:
@@ -45,9 +35,7 @@ function asTurnOnandOff(player: player):
             wait a tick
             asToggle({_player})
     else:
-        loadPlayerYml({_player})
+        asLoadPlayerYml({_player})
+        wait a tick
+        turnAutoSwap({_player})
 
-function loadPlayerYml(player: player):
-
-    if yml "%{_player}'s uuid%.data" is not loaded:
-        load "plugins\AutoSwap\players\%{_player}'s uuid%.data" as "%{_player}'s uuid%.data"

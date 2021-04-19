@@ -1,0 +1,13 @@
+on block damage:
+
+    if asPlayerHasData(player) is true:
+        asLoadPlayerYml(player)
+        if yml value "autoswap.enable" from "%player's uuid%.data" is true:
+            if gamemode of player is survival:
+                autoSwapFilter(player, target block)
+                asUnloadPlayerYml(player)
+    else:
+        asCreatePlayerData(player)
+        if gamemode of player is survival:
+            autoSwapFilter(player, target block)
+            asUnloadPlayerYml(player)

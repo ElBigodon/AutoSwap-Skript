@@ -1,0 +1,6 @@
+command /cc:
+    trigger:
+
+        loop 100 times:
+
+            send " " to all players
