@@ -1,0 +1,58 @@
+on load:
+
+    load yaml "plugins/AutoSwap/materials.data" as "asData"
+    load yaml "plugins/AutoSwap/config.yml" as "asConfig"
+
+    if yml "asData" is empty:
+
+        add any stone, any ore, any stone slabs, any stone stairs, any sandstone slabs, any sandstone, any prismarine, any ice, any nylium, netherrack, obsidian and any cobblestone to {_stonesTypes::*}
+        loop {_stonesTypes::*}:
+            set {_resources} to "%type of loop-value%"
+            replace every ", " and " or " in {_resources} with ","
+            set {_resources::*} to {_resources} split by ","
+            loop {_resources::*}:
+                add raw name of (loop-value-2 parsed as item) to yml list "materials.pickaxe" from "asData"
+
+        add any plank, any log, any door, glass, stained glass block, any chest, any wood slabs and any wood stairs to {_woodsType::*} 
+        loop {_woodsType::*}:
+            set {_resources} to "%type of loop-value%"
+            replace every ", " and " or " in {_resources} with ","
+            set {_resources::*} to {_resources} split by ","
+            loop {_resources::*}:
+                add raw name of (loop-value-2 parsed as item) to yml list "materials.axe" from "asData"
+                
+        add any leaves, any wool, dead grass, short grass, tall grass and seagrass to {_leavesTypes::*}
+        loop {_leavesTypes::*}:
+            set {_resources} to "%type of loop-value%"
+            replace every ", " and " or " in {_resources} with ","
+            set {_resources::*} to {_resources} split by ","
+            loop {_resources::*}:
+                add raw name of (loop-value-2 parsed as item) to yml list "materials.shears" from "asData"
+
+        add dirt, coarse dirt, gravel, sand, red sand and grass block to {_shovelTypes::*}
+        loop {_shovelTypes::*}:
+            set {_resources} to raw name of loop-value
+            replace every ", " and " or " in {_resources} with ","
+            set {_resources::*} to {_resources} split by ","
+            loop {_resources::*}:
+                add loop-value-2 to yml list "materials.shovel" from "asData"
+        
+        set comments of yml node "materials" from "asData" to "Caso você queira adicionar um bloco a mais, faça como abaixo. Use F3 + H no minecraft e adicione o id, exemplo: ""minecraft:podzol"" "
+        
+        save yml "asData"
+        
+    if yml "asConfig" is empty:
+    
+        set yaml list "tools.pickaxe" from "asConfig" to "silk touch", "fortune", "efficiency" and "unbreaking"
+        set yaml list "tools.axe" from "asConfig" to "silk touch", "fortune", "efficiency" and "unbreaking"
+        set yaml list "tools.shovel" from "asConfig" to "silk touch", "fortune", "efficiency" and "unbreaking"
+        set yaml list "tools.shears" from "asConfig" to "silk touch", "fortune", "efficiency" and "unbreaking"
+        
+        set comments of yml node "tools" from "asConfig" to "Adicione abaixo o encantamento que você quer priorizar."
+
+        save yml "asConfig"
+    
+on unload:
+
+    loop all loaded yaml:
+        unload loop-value

@@ -1,0 +1,53 @@
+on inventory click:
+    
+    if name of player's current inventory is "&0Opções do Auto Switch:":
+        loop numbers between 0 and 26:
+            if clicked raw slot is loop-value:
+                cancel event
+                if loop-value is 13:
+                    asTurnOnandOff(player)
+
+function asToggle(player: player):
+
+    loadPlayerYml({_player})
+
+    open chest inventory named "&0Opções do Auto Switch:" to {_player}
+
+    set {_n} to 0
+    loop 27 times:
+        set slot {_n} of {_player}'s current inventory to gray stained glass pane with name ""
+        if {_n} = 9 or 15:
+            add 1 to {_n}
+            set slot {_n} of {_player}'s current inventory to red stained glass pane with name "&cDesenvolvimento &7(Work in Progress)"
+        if {_n} = 12:
+            add 1 to {_n}
+            if yml value "autoswap.enable" from "%{_player}'s uuid%.data" is true:
+                set slot {_n} of {_player}'s current inventory to lime dye with name "&aHabilitado &7(Enabled)"
+            else:
+                set slot {_n} of {_player}'s current inventory to red dye with name "&cDesabilitado &7(Disabled)"
+
+        add 1 to {_n}
+
+
+function asTurnOnandOff(player: player):
+
+    if yml "%{_player}'s uuid%.data" is loaded:
+        if yml value "autoswap.enable" from "%{_player}'s uuid%.data" is true:
+            set yml value "autoswap.enable" from "%{_player}'s uuid%.data" to false
+            save yml "%{_player}'s uuid%.data"
+            unload "%{_player}'s uuid%.data"
+            wait a tick
+            asToggle({_player})
+        else:
+            set yml value "autoswap.enable" from "%{_player}'s uuid%.data" to true
+            save "%{_player}'s uuid%.data"
+            unload "%{_player}'s uuid%.data"
+            wait a tick
+            asToggle({_player})
+    else:
+        loadPlayerYml({_player})
+
+function loadPlayerYml(player: player):
+
+    if yml "%{_player}'s uuid%.data" is not loaded:
+        load "plugins\AutoSwap\players\%{_player}'s uuid%.data" as "%{_player}'s uuid%.data"

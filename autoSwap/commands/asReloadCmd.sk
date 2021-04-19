@@ -1,0 +1,11 @@
+command /autoswitch [<string>]:
+    aliases: as
+    trigger:
+
+        if arg-1 is set:
+            if executor has permission "autoswitch.reload":
+                if arg-1 is "reload":
+                    asReload(executor)
+
+        else:
+            asToggle(executor)

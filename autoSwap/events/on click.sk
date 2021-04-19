@@ -1,0 +1,21 @@
+on block damage:
+    if gamemode of player is survival:
+        autoSwapFilter(player, target block)
+
+# on item spawn:
+
+#     set glowing of event-entity to true
+#     wait 5 seconds
+#     set glowing of event-entity to false
+
+on join:
+
+    load "plugins\AutoSwap\players\%player's uuid%.data" as "%player's uuid%.data"
+    if yml "%player's uuid%.data" is empty:
+        set yml value "autoswap.enable" from "%player's uuid%.data" to true
+        save yml "%player's uuid%.data"
+        unload "%player's uuid%.data"
+        
+
+# on damage:   
+#     autoSwapEntity(attacker, victim)

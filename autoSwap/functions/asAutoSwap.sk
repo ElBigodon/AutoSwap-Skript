@@ -1,0 +1,91 @@
+function autoSwapFilter(player: player, block: block):
+
+    if yaml list "materials.pickaxe" from "asData" contains raw name of {_block}:
+        autoSwap({_player}, {_block}, pickaxe)
+
+    if yaml list "materials.axe" from "asData" contains raw name of {_block}:
+        autoSwap({_player}, {_block}, axe)
+
+    if yaml list "materials.shovel" from "asData" contains raw name of {_block}:
+        autoSwap({_player}, {_block}, shovel)
+
+    if yaml list "materials.shears" from "asData" contains raw name of {_block}:
+        autoSwap({_player}, {_block}, shears)
+
+function autoSwap(player: player, block: block, tool: item type):
+
+    loop yml nodes with key "tools" from "asConfig":
+        if {_tool} is loop-value parsed as item type:
+            set {_strings::*} to yml list "tools.%loop-value%" from "asConfig"
+            loop {_strings::*}:
+                add (loop-value-2 parsed as enchantment) to {_enchants::*}
+
+    if {_player}'s tool is not {_tool}:
+
+        set {_n} to 0
+        loop 9 times:
+            if slot {_n} of {_player}'s inventory is {_tool}:
+                if slot {_n} of {_player}'s inventory can break {_block}:
+                    add slot {_n} of {_player}'s inventory to {_tools::*}
+                    add 1 to {_n}
+                else:
+                    add 1 to {_n}
+            else:
+                add 1 to {_n}
+
+        # 
+        # Filtrando encantamentos
+        # 
+
+        loop {_tools::*}:
+            if loop-value is enchanted:
+                add loop-value to {_enchanteds::*}
+                add 1 to {_isEnchanted}
+
+        if {_isEnchanted} is set:
+            loop {_enchanteds::*}:
+                loop {_enchants::*}:
+                    set {_index} to loop-index-2
+                    if enchant level of {_enchants::%loop-index-2%} in loop-value-1 > 0:
+                        add loop-value-1 to {_thisEnchants::*}
+                        add 1 to {_index}
+                        stop loop
+            
+            loop {_thisEnchants::*}:
+                loop {_enchants::*}:
+                    if enchant level of loop-value-2 in loop-value-1 > 0:
+                        set {_priority::%loop-index-2%} to loop-value-1
+                        stop loop
+
+            set {_n} to 0
+            loop 9 times:
+                loop {_priority::*}:
+                    if slot {_n} of {_player}'s inventory is loop-value-2:
+                        set current hotbar slot of {_player} to slot {_n} of {_player}'s inventory
+                        stop 2 sections
+                    else:
+                        add 1 to {_n}
+                        stop loop
+                        
+        # 
+        # Caso não tenha encantamento
+        # 
+                        
+        else:
+            set {_n} to 0
+            loop 9 times:
+                if slot {_n} of {_player}'s inventory is {_tool}:
+                    if slot {_n} of {_player}'s inventory can break {_block}:
+                        set current hotbar slot of {_player} to slot {_n} of {_player}'s inventory
+                        stop loop
+                    else:
+                        send action bar "&cVocê não tem nenhuma &nferramenta&c em sua &lHOTBAR&c que seja eficiente para quebrar esse &nbloco&c." to {_player}
+                        if {sound::%{_player}%} is not set:
+                            play sound "ENTITY_VILLAGER_NO" with volume 5 to {_player}
+                            set {sound::%{_player}%} to now
+                        else if difference between {sound::%{_player}%} and now >= 2 seconds: 
+                            play sound "ENTITY_VILLAGER_NO" with volume 5 to {_player}
+                            set {sound::%{_player}%} to now
+                        stop loop
+                else:
+                    add 1 to {_n}
