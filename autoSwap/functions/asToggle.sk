@@ -1,23 +1,33 @@
 function asToggle(player: player):
 
+    if asGetLang({_player}) = "pt_br":
+        load "plugins\AutoSwap\languages\pt_br.lang" as "lang.%{_player}'s uuid%"
+    else if asGetLang({_player}) = "en_us":
+        load "plugins\AutoSwap\languages\en_us.lang" as "lang.%{_player}'s uuid%"
+    else if asGetLang({_player}) is not set:
+        load "plugins\AutoSwap\languages\en_us.lang" as "lang.%{_player}'s uuid%"
+
     asLoadPlayerYml({_player})
 
-    open chest inventory named "&0Opções do Auto Switch:" to {_player}
+    open chest inventory named yml value "lang.autoswapgui.title" from "lang.%{_player}'s uuid%" to {_player}
 
     set {_n} to 0
     loop 27 times:
-        set slot {_n} of {_player}'s current inventory to gray stained glass pane with name ""
+        if slot {_n} of {_player}'s current inventory != gray stained glass pane:
+            set slot {_n} of {_player}'s current inventory to gray stained glass pane with name " "
         if {_n} = 9 or 15:
             add 1 to {_n}
-            set slot {_n} of {_player}'s current inventory to red stained glass pane with name "&cDesenvolvimento &7(Work in Progress)"
+            set slot {_n} of {_player}'s current inventory to red stained glass pane with name yml value "lang.autoswapgui.WIP" from "lang.%{_player}'s uuid%"
         if {_n} = 12:
             add 1 to {_n}
             if yml value "autoswap.enable" from "%{_player}'s uuid%.data" is true:
-                set slot {_n} of {_player}'s current inventory to lime dye with name "&aHabilitado &7(Enabled)"
+                set slot {_n} of {_player}'s current inventory to lime dye with name yml value "lang.autoswapgui.enabled" from "lang.%{_player}'s uuid%"
             else:
-                set slot {_n} of {_player}'s current inventory to red dye with name "&cDesabilitado &7(Disabled)"
+                set slot {_n} of {_player}'s current inventory to red dye with name yml value "lang.autoswapgui.disabled" from "lang.%{_player}'s uuid%"
 
         add 1 to {_n}
+
+    unload yml "lang.%{_player}'s uuid%"
 
 function turnAutoSwap(player: player):
 

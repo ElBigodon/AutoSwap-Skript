@@ -6,6 +6,8 @@ command /autoswitch [<string>]:
             if executor has permission "autoswitch.reload":
                 if arg-1 is "reload":
                     asReload(executor)
+            else:
+                message yml value "lang.no-perm" from "lang"
 
         else:
             asToggle(executor)

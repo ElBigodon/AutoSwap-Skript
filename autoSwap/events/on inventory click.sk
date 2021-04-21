@@ -1,8 +1,18 @@
 on inventory click:
-    
-    if name of player's current inventory is "&0Opções do Auto Switch:":
+
+    if asGetLang(player) = "pt_br":
+        load "plugins\AutoSwap\languages\pt_br.lang" as "lang.%player's uuid%"
+    else if asGetLang(player) = "en_us":
+        load "plugins\AutoSwap\languages\en_us.lang" as "lang.%player's uuid%"
+    else if asGetLang(player) is not set:
+        load "plugins\AutoSwap\languages\en_us.lang" as "lang.%player's uuid%"
+
+    if name of player's current inventory is yml value "lang.autoswapgui.title" from "lang.%player's uuid%":
         loop numbers between 0 and 26:
             if clicked raw slot is loop-value:
                 cancel event
                 if loop-value is 13:
                     turnAutoSwap(player)
+
+    unload yml "lang.%player's uuid%"
+

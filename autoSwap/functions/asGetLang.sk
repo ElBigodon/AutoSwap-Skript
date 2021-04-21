@@ -1,0 +1,11 @@
+function asGetLang(player: player) :: string:
+
+    loop files in dir "plugins\AutoSwap\languages":
+        set {_lang} to loop-value
+        replace every "." and "\" in {_lang} with " "
+        set {_lang::*} to {_lang} split at " " 
+        
+        loop {_lang::*}:
+            if loop-value-2 is {_player}'s current language:
+                return loop-value-2
+                stop 2 sections
